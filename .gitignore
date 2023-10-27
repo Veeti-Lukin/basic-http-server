@@ -1,0 +1,2 @@
+# Exclude g++ binary file
+*.out
