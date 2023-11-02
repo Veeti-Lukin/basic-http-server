@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <arpa/inet.h>
+#include <vector>
 
 namespace http {    
 
@@ -13,16 +14,33 @@ namespace http {
 class HTTP_SERVER_EXCEPTION : public std::exception
 {
 public:
-    HTTP_SERVER_EXCEPTION(const std::string& msg) :
-        msg("Error: "+msg) {}
+    // Default constructor where  error message is given as parameter
+    HTTP_SERVER_EXCEPTION(const std::string msg) :
+            message_("Error: "+msg){}
+    // Constructor where error message can have placeholders that are marked with "*"
+    // values from *values_to_format* will be formatted in order to these spots
+    HTTP_SERVER_EXCEPTION(const std::string msg,
+                                  std::vector<std::string> values_to_format) :
+            message_("Error: " + msg), values_to_format_(values_to_format)
+    {
+        // format the values to placeholder spots
+        for (std::string& value : values_to_format)
+        {
+            message_.replace(message_.find('*'), 1, value);
+
+        }
+    }
 
     virtual const char* what() const noexcept override
-        {
-            return msg.c_str();
-        }
-    private:
-        std::string msg;
+    {
+        return message_.c_str();
+    }
+
+private:
+    std::string message_;
+    std::vector<std::string> values_to_format_;
 };
+
 
 
 
@@ -50,7 +68,7 @@ private:
     struct sockaddr_in socket_address_;
     unsigned int socket_address_len_;
 
-    // maximum number of coneections threads the socket accepts to queue
+    // maximum number of connections threads the socket accepts to queue
     // if full the client connecting will be denied
     unsigned int max_connection_threads_ = 1;
 

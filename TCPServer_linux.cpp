@@ -1,4 +1,4 @@
-﻿#include "http_tcpServer_linux.h"
+﻿#include "TCPServer_linux.h"
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -10,6 +10,7 @@ namespace http {
 const std::string SOCKET_INIT_ERROR = "Cannot create socket";
 const std::string SOCKET_BIND_ERROR = "Cannot bind socket to address";
 const std::string SOCKET_LISTENING_ERROR = "Failed to listen the socket";
+const std::string SOCKET_CONNECTION_ACCEPT_ERROR = "Server failed to accept incoming connection from ADDRESS: *; PORT: *";
 
 const int BUFFER_SIZE = 30720;
 
@@ -50,6 +51,11 @@ void TcpServer::startListen() {
         std::cout << "------ Received Request from client ------" << std::endl;
 
         sendResponse();
+
+        for(char c : buffer) {
+            std::cout << c;
+        }
+        std::cout << std::endl;
         close(new_socket_);
     }
 }
@@ -79,10 +85,8 @@ void TcpServer::acceptConnection(int &new_socket)
     new_socket = accept(socket_, (sockaddr*)&socket_address_, &socket_address_len_);
 
     if(new_socket < 0) {
-        // TODO: muuta excpetion classia ja korjaa throwiks
-        std::cout << "Server failed to accept incoming connection from ADDRESS: "
-                  << inet_ntoa(socket_address_.sin_addr) << "; PORT: "
-                  << ntohs(socket_address_.sin_port) << std::endl;
+        throw HTTP_SERVER_EXCEPTION(SOCKET_CONNECTION_ACCEPT_ERROR, {inet_ntoa(socket_address_.sin_addr),
+                                                                     ntohs(socket_address_.sin_port)})
     }
 
 }
@@ -100,7 +104,10 @@ void TcpServer::sendResponse() {
 }
 
 std::string TcpServer::buildResponse() {
-    std::string htmlFile = "<!DOCTYPE html><html lang=\"en\"><body><h1> HOME </h1><p> Hello from your Server :) </p><p><b>MORO!<b></p></body></html>";
+    std::string htmlFile = "<!DOCTYPE html><html lang=\"en\"><body><h1> HOME </h1><p> Hello from your Server :) </p><p><b>MORO!<b></p><form method=\"get\" action=\"/start\">\n"
+                           "    <h5>Start Ad-Placer!</h5>\n"
+                           "    <input type=\"submit\" value=\"Start\">\n"
+                           "</form></body></html>";
     std::ostringstream ss;
     ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\n\n"
        << htmlFile;
