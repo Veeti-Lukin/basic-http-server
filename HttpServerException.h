@@ -1,13 +1,11 @@
-#ifndef INCLUDED_HTTP_TCPSERVER_LINUX
-#define INCLUDED_HTTP_TCPSERVER_LINUX
+#ifndef BASIC_HTTP_SERVER_HTTPSERVEREXCEPTION_H
+#define BASIC_HTTP_SERVER_HTTPSERVEREXCEPTION_H
 
 #include <exception>
 #include <string>
-#include <iostream>
-#include <arpa/inet.h>
 #include <vector>
 
-namespace http {    
+namespace http {
 
 // Exception class, of which instances will be thrown in case of errors
 // or faulty use of the server class
@@ -20,7 +18,7 @@ public:
     // Constructor where error message can have placeholders that are marked with "*"
     // values from *values_to_format* will be formatted in order to these spots
     HTTP_SERVER_EXCEPTION(const std::string msg,
-                                  std::vector<std::string> values_to_format) :
+                          std::vector<std::string> values_to_format) :
             message_("Error: " + msg), values_to_format_(values_to_format)
     {
         // format the values to placeholder spots
@@ -41,44 +39,6 @@ private:
     std::vector<std::string> values_to_format_;
 };
 
+} // http
 
-
-
-class TcpServer
-{
-public:
-    TcpServer(std::string ip_address, int port);
-    ~TcpServer();
-
-    //
-    void startListen();
-
-private:
-    std::string ip_address_;
-    int port_;
-
-    int socket_;
-    int new_socket_;
-
-    long incoming_message_;
-    std::string server_message_;
-
-    // defined in arpa/inet.h
-    // TODO: make my own version of this
-    struct sockaddr_in socket_address_;
-    unsigned int socket_address_len_;
-
-    // maximum number of connections threads the socket accepts to queue
-    // if full the client connecting will be denied
-    unsigned int max_connection_threads_ = 1;
-
-    int startServer();
-    void closeServer();
-    void acceptConnection(int &new_socket);
-    void sendResponse();
-    std::string buildResponse();
-};
-
-} // namespace http
-    
-#endif
+#endif //BASIC_HTTP_SERVER_HTTPSERVEREXCEPTION_H
