@@ -101,7 +101,7 @@ TCPSocket TCPSocket::acceptConnectionFromQueue() {
 
     return TCPSocket(new_connection_socket);
 }
-std::string TCPSocket::readRequest() {
+std::string TCPSocket::readRawRequest() {
     if(!is_connected_to_client) throw HTTP_SERVER_EXCEPTION(SOCKET_NOT_CONNECTED_TO_CLIENT_ERROR);
 
     char buffer[BUFFER_SIZE] = {0};
@@ -113,7 +113,11 @@ std::string TCPSocket::readRequest() {
         received_bytes = recv(socket_, buffer, BUFFER_SIZE, 0);
     #endif
     if (received_bytes < 0) throw HTTP_SERVER_EXCEPTION("Failed to read bytes from client socket connection");
-    return buffer;
+    return std::string(buffer);
+}
+
+HttpRequest TCPSocket::readRequest() {
+    return HttpRequest(readRawRequest());
 }
 
 bool TCPSocket::sendResponse(std::string serialized_response) {
@@ -121,21 +125,22 @@ bool TCPSocket::sendResponse(std::string serialized_response) {
 
     long bytes_sent;
     long total_bytes_sent;
+
     #ifdef __linux__
         bytes_sent = write(socket_, serialized_response.c_str(), serialized_response.size());
 
-        return bytes_sent == serialized_response.size();
+            return bytes_sent == serialized_response.size();
     #elif _WIN32
-        while (total_bytes_sent < serialized_response.size())
+    while (total_bytes_sent < serialized_response.size())
+    {
+        bytes_sent = send(socket_, serialized_response.c_str(), serialized_response.size(), 0);
+        if (bytes_sent < 0)
         {
-            bytes_sent = send(socket_, serialized_response.c_str(), serialized_response.size(), 0);
-            if (bytes_sent < 0)
-            {
-                break;
-            }
-            total_bytes_sent += bytes_sent;
+            break;
         }
-        return total_bytes_sent == serialized_response.size();
+        total_bytes_sent += bytes_sent;
+    }
+    return total_bytes_sent == serialized_response.size();
     #endif
 }
 
@@ -151,6 +156,7 @@ bool TCPSocket::sendResponse(std::string serialized_response) {
         socket_ = sock;
         is_connected_to_client = true;
     }
+
 #endif
 
 } // http

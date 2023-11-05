@@ -13,6 +13,7 @@
 #include <exception>
 #include <unistd.h>
 #include <vector>
+#include "HttpRequest.h"
 
 namespace http {
 
@@ -35,7 +36,8 @@ public:
 
     void setMaxAmountOfConnectionThreads(unsigned int amount);
 
-    std::string readRequest();
+    std::string readRawRequest();
+    HttpRequest readRequest();
     bool sendResponse(std::string serialized_response);
 
 private:

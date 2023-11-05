@@ -1,11 +1,10 @@
 ﻿#include "TCPServer.h"
 
-#include <unistd.h>
 #include <sstream>
+#include "HttpRequest.h"
+#include "http_types.h"
 
 namespace http {
-
-const int BUFFER_SIZE = 30720;
 
 TcpServer::TcpServer(std::string ip_address, int port)
     : ip_address_(ip_address), port_(port), server_message_(buildResponse()) {
@@ -24,18 +23,31 @@ void TcpServer::startListen() {
               << " PORT: " << port_ << std::endl;
 
     while (true) {
-        std::cout << "Waiting for new connection" <<  std::endl;
+        std::cout << "------  Waiting for new connection ------" <<  std::endl;
 
         TCPSocket connection_socket = socket_.acceptConnectionFromQueue();
 
         std::cout << "------ Received Request from client ------" << std::endl;
-        std::cout << connection_socket.readRequest() << std::endl;
 
-        //sendResponse();
-        std::string a;
+        //std::string request = connection_socket.readRequest();
+        //std::cout << request << '\n';
+
+        HttpRequest req = connection_socket.readRequest();
+        // someway using std::endl here breaks the whole server :)
+        std::cout << getRequestMethodString(req.getRequestMethod()) << " " << req.getResourcePath() << " " << req.getProtocol() << "\n";
+        std::cout << req.hasHeaderField(types::CONTENT_TYPE_HEADER) << "\n";
+        std::cout << types::getContentBodyFormatString(req.getContentBodyFormat()) << "\n";
+
+        std::string a = "";
         //std::getline(std::cin, a);
 
-        connection_socket.sendResponse(buildResponse(a));
+        bool response_sent = connection_socket.sendResponse(buildResponse(a));
+        if (response_sent) {
+            std::cout << "------ Server Response sent to client ------"  << std::endl;
+        }
+        else {
+            std::cout << "------ Error sending response to client ------" << std::endl;
+        }
     }
 }
 
@@ -54,11 +66,17 @@ void TcpServer::startListen() {
 
 std::string TcpServer::buildResponse(std::string text) {
     std::string htmlFile = "<!DOCTYPE html><html lang=\"en\"><body><h1> HOME </h1><p> Hello from your Server :) </p><p><b>MORO!<b></p><form method=\"get\" action=\"/start\">\n"
-                           "    <h5>"+ text + "</h5>\n"
+                           "    <h5>" "server message:  " + text + "</h5>\n"
                            "    <input type=\"submit\" value=\"Start\">\n"
-                           "</form></body></html>";
+                           "</form>"
+                           "<form action=\"http://localhost:1234/\" method=\"post\" enctype=\"multipart/form-data\">\n"
+                                                                   "  <label>Name: <input name=\"myTextField\" value=\"Test\"></label>\n"
+                                                                   "  <label><input type=\"checkbox\" name=\"myCheckBox\"> Check</label>\n"
+                                                                   "  <label>Upload file: <input type=\"file\" name=\"myFile\" value=\"test.txt\"></label>\n"
+                                                                   "  <button>Send the file</button>\n"
+                                                                   "</form></body></html>";
     std::ostringstream ss;
-    ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\n\n"
+    ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\r\n\r\n"
        << htmlFile;
 
     return ss.str();
