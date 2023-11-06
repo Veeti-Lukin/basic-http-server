@@ -40,10 +40,16 @@ void TcpServer::startListen() {
         std::cout << req.hasHeaderField(types::CONTENT_TYPE_HEADER) << "\n";
         std::cout << types::getContentBodyFormatString(req.getContentBodyFormat()) << "\n";
 
-        std::string a = "";
-        //std::getline(std::cin, a);
+        HttpResponse response;
+        if(handlers_.find(req.getResourcePath()) != handlers_.end() && handlers_[req.getResourcePath()].find(req.getRequestMethod()) !=  handlers_[req.getResourcePath()].end()) {
+            response = handlers_[req.getResourcePath()].at(req.getRequestMethod())(req, response);
+        }
+        else {
+            response.setProtocol(types::HttpProtocolVersion::HTTP1_1);
+            response.setResponseStatusCode(types::ResponseStatusCode::NotFound);
+        }
 
-        bool response_sent = connection_socket.sendResponse(buildTestResponse(a));
+        bool response_sent = connection_socket.sendResponse(response);
         if (response_sent) {
             std::cout << "------ Server Response sent to client ------"  << std::endl;
         }
@@ -53,6 +59,14 @@ void TcpServer::startListen() {
     }
 }
 
+void TcpServer::bindHandler(types::RequestMethod request_method, ResourcePath resource_path,
+                            HandlerFunction handler) {
+    if(handlers_.find(resource_path) == handlers_.end()) {
+        handlers_.insert({resource_path, {}});
+    }
+
+    handlers_[resource_path].insert({request_method, handler});
+}
 
 /*void TcpServer::sendResponse() {
     int bytes_sent;
@@ -86,5 +100,6 @@ HttpResponse TcpServer::buildTestResponse(std::string text)  {
 
     return response;
 }
+
 
 } // namespace http
