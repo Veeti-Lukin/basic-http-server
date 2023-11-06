@@ -14,7 +14,7 @@ public:
 
     types::RequestMethod getRequestMethod();
     std::string getResourcePath();
-    std::string getProtocol();
+    types::HttpProtocolVersion getProtocol();
     bool hasHeaderField(std::string& header_key);
     std::string getHeaderField(std::string& header_key);
     std::string getContentBody();
@@ -23,7 +23,7 @@ public:
 private:
     types::RequestMethod request_method_;
     std::string resource_path_;
-    std::string protocol_;
+    types::HttpProtocolVersion protocol_;
     std::string content_body_;
     std::unordered_map<std::string, std::string> headers_;
     types::ContentBodyFormat content_body_format_;

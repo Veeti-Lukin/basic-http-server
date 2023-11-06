@@ -2,6 +2,7 @@
 #include "TCPSocket.h"
 #include "HttpServerException.h"
 
+
 namespace http {
 
 const std::string  WSA_STARTUP_ERROR = "WSAStartup failed";
@@ -120,7 +121,7 @@ HttpRequest TCPSocket::readRequest() {
     return HttpRequest(readRawRequest());
 }
 
-bool TCPSocket::sendResponse(std::string serialized_response) {
+bool TCPSocket::sendRawResponse(std::string serialized_response) {
     if(!is_connected_to_client) throw HTTP_SERVER_EXCEPTION(SOCKET_NOT_CONNECTED_TO_CLIENT_ERROR);
 
     long bytes_sent;
@@ -144,6 +145,10 @@ bool TCPSocket::sendResponse(std::string serialized_response) {
     #endif
 }
 
+bool TCPSocket::sendResponse(HttpResponse response) {
+    return sendRawResponse(response.serialize());
+}
+
 #ifdef __linux__
     TCPSocket::TCPSocket(int sock) {
         socket_ = sock;
@@ -156,7 +161,6 @@ bool TCPSocket::sendResponse(std::string serialized_response) {
         socket_ = sock;
         is_connected_to_client = true;
     }
-
 #endif
 
 } // http

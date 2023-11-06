@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include "TCPSocket.h"
+#include "HttpResponse.h"
 
 namespace http {    
 
@@ -24,10 +25,7 @@ private:
 
     TCPSocket socket_;
 
-    long incoming_message_;
-    std::string server_message_;
-
-    std::string buildResponse(std::string text = std::string());
+    HttpResponse buildTestResponse(std::string text = std::string());
 };
 
 } // namespace http

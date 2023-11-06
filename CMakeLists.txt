@@ -11,8 +11,8 @@ add_executable(basic_http_server
         http_types.h
         HttpRequest.cpp
         HttpRequest.h
-        #HttpResponse.cpp
-        #HttpResponse.h
+        HttpResponse.cpp
+        HttpResponse.h
         main.cpp
         TCPSocket.cpp
         TCPSocket.h

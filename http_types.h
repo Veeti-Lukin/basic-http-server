@@ -85,230 +85,260 @@ enum class ResponseStatusCode {
     NotExtended = 510,
     NetworkAuthenticationRequired = 511,
 
-    UnknownStatusCode = 999
+    Unknown = 999
 };
 
-inline std::string getResponseStatusCodeString(ResponseStatusCode c) {
-    switch (c) {
+inline std::string getResponseStatusCodeString(ResponseStatusCode status_code) {
+    switch (status_code) {
         // Informational responses (1xx)
         case ResponseStatusCode::Continue:
-            return "Continue";
+            return "100 Continue";
         case ResponseStatusCode::SwitchingProtocols:
-            return "Switching Protocols";
+            return "101 Switching Protocols";
         case ResponseStatusCode::Processing:
-            return "Processing";
+            return "102 Processing";
         case ResponseStatusCode::EarlyHints:
-            return "Early Hints";
+            return "103 Early Hints";
 
             // Successful responses (2xx)
         case ResponseStatusCode::OK:
-            return "OK";
+            return "200 OK";
         case ResponseStatusCode::Created:
-            return "Created";
+            return "201 Created";
         case ResponseStatusCode::Accepted:
-            return "Accepted";
+            return "202 Accepted";
         case ResponseStatusCode::NonAuthoritativeInformation:
-            return "Non-Authoritative Information";
+            return "203 Non-Authoritative Information";
         case ResponseStatusCode::NoContent:
-            return "No Content";
+            return "204 No Content";
         case ResponseStatusCode::ResetContent:
-            return "Reset Content";
+            return "205 Reset Content";
         case ResponseStatusCode::PartialContent:
-            return "Partial Content";
+            return "206 Partial Content";
         case ResponseStatusCode::MultiStatus:
-            return "Multi-Status";
+            return "207 Multi-Status";
         case ResponseStatusCode::AlreadyReported:
-            return "Already Reported";
+            return "208 Already Reported";
         case ResponseStatusCode::IMUsed:
-            return "IM Used";
+            return "226 IM Used";
 
             // Redirection messages (3xx)
         case ResponseStatusCode::MultipleChoices:
-            return "Multiple Choices";
+            return "300 Multiple Choices";
         case ResponseStatusCode::MovedPermanently:
-            return "Moved Permanently";
+            return "301 Moved Permanently";
         case ResponseStatusCode::Found:
-            return "Found";
+            return "302 Found";
         case ResponseStatusCode::SeeOther:
-            return "See Other";
+            return "303 See Other";
         case ResponseStatusCode::NotModified:
-            return "Not Modified";
+            return "304 Not Modified";
         case ResponseStatusCode::UseProxy:
-            return "Use Proxy";
+            return "305 Use Proxy";
         case ResponseStatusCode::SwitchProxy:
-            return "Switch Proxy";
+            return "306 Switch Proxy";
         case ResponseStatusCode::TemporaryRedirect:
-            return "Temporary Redirect";
+            return "307 Temporary Redirect";
         case ResponseStatusCode::PermanentRedirect:
-            return "Permanent Redirect";
+            return "308 Permanent Redirect";
 
             // Client errors (4xx)
         case ResponseStatusCode::BadRequest:
-            return "Bad Request";
+            return "400 Bad Request";
         case ResponseStatusCode::Unauthorized:
-            return "Unauthorized";
+            return "401 Unauthorized";
         case ResponseStatusCode::PaymentRequired:
-            return "Payment Required";
+            return "402 Payment Required";
         case ResponseStatusCode::Forbidden:
-            return "Forbidden";
+            return "403 Forbidden";
         case ResponseStatusCode::NotFound:
-            return "Not Found";
+            return "404 Not Found";
         case ResponseStatusCode::MethodNotAllowed:
-            return "Method Not Allowed";
+            return "405 Method Not Allowed";
         case ResponseStatusCode::NotAcceptable:
-            return "Not Acceptable";
+            return "406 Not Acceptable";
         case ResponseStatusCode::ProxyAuthenticationRequired:
-            return "Proxy Authentication Required";
+            return "407 Proxy Authentication Required";
         case ResponseStatusCode::RequestTimeout:
-            return "Request Timeout";
+            return "408 Request Timeout";
         case ResponseStatusCode::Conflict:
-            return "Conflict";
+            return "409 Conflict";
         case ResponseStatusCode::Gone:
-            return "Gone";
+            return "410 Gone";
         case ResponseStatusCode::LengthRequired:
-            return "Length Required";
+            return "411 Length Required";
         case ResponseStatusCode::PreconditionFailed:
-            return "Precondition Failed";
+            return "412 Precondition Failed";
         case ResponseStatusCode::PayloadTooLarge:
-            return "Payload Too Large";
+            return "413 Payload Too Large";
         case ResponseStatusCode::URITooLong:
-            return "URI Too Long";
+            return "414 URI Too Long";
         case ResponseStatusCode::UnsupportedMediaType:
-            return "Unsupported Media Type";
+            return "415 Unsupported Media Type";
         case ResponseStatusCode::RangeNotSatisfiable:
-            return "Range Not Satisfiable";
+            return "416 Range Not Satisfiable";
         case ResponseStatusCode::ExpectationFailed:
-            return "Expectation Failed";
+            return "417 Expectation Failed";
         case ResponseStatusCode::IAmATeapot:
-            return "I'm a teapot";
+            return "418 I'm a Teapot";
         case ResponseStatusCode::MisdirectedRequest:
-            return "Misdirected Request";
+            return "421 Misdirected Request";
         case ResponseStatusCode::UnprocessableEntity:
-            return "Unprocessable Entity";
+            return "422 Unprocessable Entity";
         case ResponseStatusCode::Locked:
-            return "Locked";
+            return "423 Locked";
         case ResponseStatusCode::FailedDependency:
-            return "Failed Dependency";
+            return "424 Failed Dependency";
         case ResponseStatusCode::TooEarly:
-            return "Too Early";
+            return "425 Too Early";
         case ResponseStatusCode::UpgradeRequired:
-            return "Upgrade Required";
+            return "426 Upgrade Required";
         case ResponseStatusCode::PreconditionRequired:
-            return "Precondition Required";
+            return "428 Precondition Required";
         case ResponseStatusCode::TooManyRequests:
-            return "Too Many Requests";
+            return "429 Too Many Requests";
         case ResponseStatusCode::RequestHeaderFieldsTooLarge:
-            return "Request Header Fields Too Large";
+            return "431 Request Header Fields Too Large";
         case ResponseStatusCode::UnavailableForLegalReasons:
-            return "Unavailable For Legal Reasons";
+            return "451 Unavailable For Legal Reasons";
 
             // Server errors (5xx)
         case ResponseStatusCode::InternalServerError:
-            return "Internal Server Error";
+            return "500 Internal Server Error";
         case ResponseStatusCode::NotImplemented:
-            return "Not Implemented";
+            return "501 Not Implemented";
         case ResponseStatusCode::BadGateway:
-            return "Bad Gateway";
+            return "502 Bad Gateway";
         case ResponseStatusCode::ServiceUnavailable:
-            return "Service Unavailable";
+            return "503 Service Unavailable";
         case ResponseStatusCode::GatewayTimeout:
-            return "Gateway Timeout";
+            return "504 Gateway Timeout";
         case ResponseStatusCode::HTTPVersionNotSupported:
-            return "HTTP Version Not Supported";
+            return "505 HTTP Version Not Supported";
         case ResponseStatusCode::VariantAlsoNegotiates:
-            return "Variant Also Negotiates";
+            return "506 Variant Also Negotiates";
         case ResponseStatusCode::InsufficientStorage:
-            return "Insufficient Storage";
+            return "507 Insufficient Storage";
         case ResponseStatusCode::LoopDetected:
-            return "Loop Detected";
+            return "508 Loop Detected";
         case ResponseStatusCode::NotExtended:
-            return "Not Extended";
+            return "510 Not Extended";
         case ResponseStatusCode::NetworkAuthenticationRequired:
-            return "Network Authentication Required";
+            return "511 Network Authentication Required";
 
+        case ResponseStatusCode::Unknown:
         default:
-            return "Unknown Status Code";
+            return "999 Unknown";
     }
 }
 
 inline ResponseStatusCode getResponseStatusCodeEnum(const std::string &statusString) {
-    if (statusString == "Continue") return ResponseStatusCode::Continue;
-    else if (statusString == "Switching Protocols") return ResponseStatusCode::SwitchingProtocols;
-    else if (statusString == "Processing") return ResponseStatusCode::Processing;
-    else if (statusString == "Early Hints") return ResponseStatusCode::EarlyHints;
+    if (statusString == "100 Continue") return ResponseStatusCode::Continue;
+    else if (statusString == "101 Switching Protocols") return ResponseStatusCode::SwitchingProtocols;
+    else if (statusString == "102 Processing") return ResponseStatusCode::Processing;
+    else if (statusString == "103 Early Hints") return ResponseStatusCode::EarlyHints;
 
         // Successful responses (2xx)
-    else if (statusString == "OK") return ResponseStatusCode::OK;
-    else if (statusString == "Created") return ResponseStatusCode::Created;
-    else if (statusString == "Accepted") return ResponseStatusCode::Accepted;
-    else if (statusString == "Non-Authoritative Information") return ResponseStatusCode::NonAuthoritativeInformation;
-    else if (statusString == "No Content") return ResponseStatusCode::NoContent;
-    else if (statusString == "Reset Content") return ResponseStatusCode::ResetContent;
-    else if (statusString == "Partial Content") return ResponseStatusCode::PartialContent;
-    else if (statusString == "Multi-Status") return ResponseStatusCode::MultiStatus;
-    else if (statusString == "Already Reported") return ResponseStatusCode::AlreadyReported;
-    else if (statusString == "IM Used") return ResponseStatusCode::IMUsed;
+    else if (statusString == "200 OK") return ResponseStatusCode::OK;
+    else if (statusString == "201 Created") return ResponseStatusCode::Created;
+    else if (statusString == "202 Accepted") return ResponseStatusCode::Accepted;
+    else if (statusString == "203 Non-Authoritative Information") return ResponseStatusCode::NonAuthoritativeInformation;
+    else if (statusString == "204 No Content") return ResponseStatusCode::NoContent;
+    else if (statusString == "205 Reset Content") return ResponseStatusCode::ResetContent;
+    else if (statusString == "206 Partial Content") return ResponseStatusCode::PartialContent;
+    else if (statusString == "207 Multi-Status") return ResponseStatusCode::MultiStatus;
+    else if (statusString == "208 Already Reported") return ResponseStatusCode::AlreadyReported;
+    else if (statusString == "226 IM Used") return ResponseStatusCode::IMUsed;
 
         // Redirection messages (3xx)
-    else if (statusString == "Multiple Choices") return ResponseStatusCode::MultipleChoices;
-    else if (statusString == "Moved Permanently") return ResponseStatusCode::MovedPermanently;
-    else if (statusString == "Found") return ResponseStatusCode::Found;
-    else if (statusString == "See Other") return ResponseStatusCode::SeeOther;
-    else if (statusString == "Not Modified") return ResponseStatusCode::NotModified;
-    else if (statusString == "Use Proxy") return ResponseStatusCode::UseProxy;
-    else if (statusString == "Switch Proxy") return ResponseStatusCode::SwitchProxy;
-    else if (statusString == "Temporary Redirect") return ResponseStatusCode::TemporaryRedirect;
-    else if (statusString == "Permanent Redirect") return ResponseStatusCode::PermanentRedirect;
+    else if (statusString == "300 Multiple Choices") return ResponseStatusCode::MultipleChoices;
+    else if (statusString == "301 Moved Permanently") return ResponseStatusCode::MovedPermanently;
+    else if (statusString == "302 Found") return ResponseStatusCode::Found;
+    else if (statusString == "303 See Other") return ResponseStatusCode::SeeOther;
+    else if (statusString == "304 Not Modified") return ResponseStatusCode::NotModified;
+    else if (statusString == "305 Use Proxy") return ResponseStatusCode::UseProxy;
+    else if (statusString == "306 Switch Proxy") return ResponseStatusCode::SwitchProxy;
+    else if (statusString == "307 Temporary Redirect") return ResponseStatusCode::TemporaryRedirect;
+    else if (statusString == "308 Permanent Redirect") return ResponseStatusCode::PermanentRedirect;
 
         // Client errors (4xx)
-    else if (statusString == "Bad Request") return ResponseStatusCode::BadRequest;
-    else if (statusString == "Unauthorized") return ResponseStatusCode::Unauthorized;
-    else if (statusString == "Payment Required") return ResponseStatusCode::PaymentRequired;
-    else if (statusString == "Forbidden") return ResponseStatusCode::Forbidden;
-    else if (statusString == "Not Found") return ResponseStatusCode::NotFound;
-    else if (statusString == "Method Not Allowed") return ResponseStatusCode::MethodNotAllowed;
-    else if (statusString == "Not Acceptable") return ResponseStatusCode::NotAcceptable;
-    else if (statusString == "Proxy Authentication Required") return ResponseStatusCode::ProxyAuthenticationRequired;
-    else if (statusString == "Request Timeout") return ResponseStatusCode::RequestTimeout;
-    else if (statusString == "Conflict") return ResponseStatusCode::Conflict;
-    else if (statusString == "Gone") return ResponseStatusCode::Gone;
-    else if (statusString == "Length Required") return ResponseStatusCode::LengthRequired;
-    else if (statusString == "Precondition Failed") return ResponseStatusCode::PreconditionFailed;
-    else if (statusString == "Payload Too Large") return ResponseStatusCode::PayloadTooLarge;
-    else if (statusString == "URI Too Long") return ResponseStatusCode::URITooLong;
-    else if (statusString == "Unsupported Media Type") return ResponseStatusCode::UnsupportedMediaType;
-    else if (statusString == "Range Not Satisfiable") return ResponseStatusCode::RangeNotSatisfiable;
-    else if (statusString == "Expectation Failed") return ResponseStatusCode::ExpectationFailed;
-    else if (statusString == "I'm a teapot") return ResponseStatusCode::IAmATeapot;
-    else if (statusString == "Misdirected Request") return ResponseStatusCode::MisdirectedRequest;
-    else if (statusString == "Unprocessable Entity") return ResponseStatusCode::UnprocessableEntity;
-    else if (statusString == "Locked") return ResponseStatusCode::Locked;
-    else if (statusString == "Failed Dependency") return ResponseStatusCode::FailedDependency;
-    else if (statusString == "Too Early") return ResponseStatusCode::TooEarly;
-    else if (statusString == "Upgrade Required") return ResponseStatusCode::UpgradeRequired;
-    else if (statusString == "Precondition Required") return ResponseStatusCode::PreconditionRequired;
-    else if (statusString == "Too Many Requests") return ResponseStatusCode::TooManyRequests;
-    else if (statusString == "Request Header Fields Too Large") return ResponseStatusCode::RequestHeaderFieldsTooLarge;
-    else if (statusString == "Unavailable For Legal Reasons") return ResponseStatusCode::UnavailableForLegalReasons;
+    else if (statusString == "400 Bad Request") return ResponseStatusCode::BadRequest;
+    else if (statusString == "401 Unauthorized") return ResponseStatusCode::Unauthorized;
+    else if (statusString == "402 Payment Required") return ResponseStatusCode::PaymentRequired;
+    else if (statusString == "403 Forbidden") return ResponseStatusCode::Forbidden;
+    else if (statusString == "404 Not Found") return ResponseStatusCode::NotFound;
+    else if (statusString == "405 Method Not Allowed") return ResponseStatusCode::MethodNotAllowed;
+    else if (statusString == "406 Not Acceptable") return ResponseStatusCode::NotAcceptable;
+    else if (statusString == "407 Proxy Authentication Required") return ResponseStatusCode::ProxyAuthenticationRequired;
+    else if (statusString == "408 Request Timeout") return ResponseStatusCode::RequestTimeout;
+    else if (statusString == "409 Conflict") return ResponseStatusCode::Conflict;
+    else if (statusString == "410 Gone") return ResponseStatusCode::Gone;
+    else if (statusString == "411 Length Required") return ResponseStatusCode::LengthRequired;
+    else if (statusString == "412 Precondition Failed") return ResponseStatusCode::PreconditionFailed;
+    else if (statusString == "413 Payload Too Large") return ResponseStatusCode::PayloadTooLarge;
+    else if (statusString == "414 URI Too Long") return ResponseStatusCode::URITooLong;
+    else if (statusString == "415 Unsupported Media Type") return ResponseStatusCode::UnsupportedMediaType;
+    else if (statusString == "416 Range Not Satisfiable") return ResponseStatusCode::RangeNotSatisfiable;
+    else if (statusString == "417 Expectation Failed") return ResponseStatusCode::ExpectationFailed;
+    else if (statusString == "418 I'm a Teapot") return ResponseStatusCode::IAmATeapot;
+    else if (statusString == "421 Misdirected Request") return ResponseStatusCode::MisdirectedRequest;
+    else if (statusString == "422 Unprocessable Entity") return ResponseStatusCode::UnprocessableEntity;
+    else if (statusString == "423 Locked") return ResponseStatusCode::Locked;
+    else if (statusString == "424 Failed Dependency") return ResponseStatusCode::FailedDependency;
+    else if (statusString == "425 Too Early") return ResponseStatusCode::TooEarly;
+    else if (statusString == "426 Upgrade Required") return ResponseStatusCode::UpgradeRequired;
+    else if (statusString == "428 Precondition Required") return ResponseStatusCode::PreconditionRequired;
+    else if (statusString == "429 Too Many Requests") return ResponseStatusCode::TooManyRequests;
+    else if (statusString == "431 Request Header Fields Too Large") return ResponseStatusCode::RequestHeaderFieldsTooLarge;
+    else if (statusString == "451 Unavailable For Legal Reasons") return ResponseStatusCode::UnavailableForLegalReasons;
 
         // Server errors (5xx)
-    else if (statusString == "Internal Server Error") return ResponseStatusCode::InternalServerError;
-    else if (statusString == "Not Implemented") return ResponseStatusCode::NotImplemented;
-    else if (statusString == "Bad Gateway") return ResponseStatusCode::BadGateway;
-    else if (statusString == "Service Unavailable") return ResponseStatusCode::ServiceUnavailable;
-    else if (statusString == "Gateway Timeout") return ResponseStatusCode::GatewayTimeout;
-    else if (statusString == "HTTP Version Not Supported") return ResponseStatusCode::HTTPVersionNotSupported;
-    else if (statusString == "Variant Also Negotiates") return ResponseStatusCode::VariantAlsoNegotiates;
-    else if (statusString == "Insufficient Storage") return ResponseStatusCode::InsufficientStorage;
-    else if (statusString == "Loop Detected") return ResponseStatusCode::LoopDetected;
-    else if (statusString == "Not Extended") return ResponseStatusCode::NotExtended;
-    else if (statusString == "Network Authentication Required")
-        return ResponseStatusCode::NetworkAuthenticationRequired;
+    else if (statusString == "500 Internal Server Error") return ResponseStatusCode::InternalServerError;
+    else if (statusString == "501 Not Implemented") return ResponseStatusCode::NotImplemented;
+    else if (statusString == "502 Bad Gateway") return ResponseStatusCode::BadGateway;
+    else if (statusString == "503 Service Unavailable") return ResponseStatusCode::ServiceUnavailable;
+    else if (statusString == "504 Gateway Timeout") return ResponseStatusCode::GatewayTimeout;
+    else if (statusString == "505 HTTP Version Not Supported") return ResponseStatusCode::HTTPVersionNotSupported;
+    else if (statusString == "506 Variant Also Negotiates") return ResponseStatusCode::VariantAlsoNegotiates;
+    else if (statusString == "507 Insufficient Storage") return ResponseStatusCode::InsufficientStorage;
+    else if (statusString == "508 Loop Detected") return ResponseStatusCode::LoopDetected;
+    else if (statusString == "510 Not Extended") return ResponseStatusCode::NotExtended;
+    else if (statusString == "511 Network Authentication Required") return ResponseStatusCode::NetworkAuthenticationRequired;
 
     // If the input string doesn't match any known status code
-    return ResponseStatusCode::UnknownStatusCode;
+    return ResponseStatusCode::Unknown;
 }
 
+enum class HttpProtocolVersion {
+    HTTP1_0,
+    HTTP1_1,
+    HTTP2,
+
+    Unknown
+};
+
+inline std::string getHttpProtocolVersionString (HttpProtocolVersion protocol_version) {
+    switch (protocol_version) {
+        case HttpProtocolVersion::HTTP1_0:
+            return "HTTP/1.0";
+        case HttpProtocolVersion::HTTP1_1:
+            return "HTTP/1.1";
+        case HttpProtocolVersion::HTTP2:
+            return "HTTP/2";
+        case HttpProtocolVersion::Unknown:
+        default:
+            return "Unknown";
+    }
+}
+
+inline HttpProtocolVersion getHttpProtocolVersionEnum (std::string protocol_version_string) {
+    protocol_version_string = std::regex_replace(protocol_version_string, std::regex("\r"), "");
+    if(protocol_version_string == "HTTP/1.0") return HttpProtocolVersion::HTTP1_0;
+    else if (protocol_version_string == "HTTP/1.1") return HttpProtocolVersion::HTTP1_1;
+    else if (protocol_version_string == "HTTP/2") return HttpProtocolVersion::HTTP2;
+
+    return HttpProtocolVersion::Unknown;
+}
 
 // The method of the http request
 // More info is found from here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
@@ -367,6 +397,8 @@ inline std::string getRequestMethodString(RequestMethod method) {
 }
 
 static std::string CONTENT_TYPE_HEADER = "Content-Type";
+static std::string CONTENT_LENGTH_HEADER = "Content-Length";
+const static std::string END_OF_HEADERS = "\r\n\r\n";
 
 enum class ContentBodyFormat {
     // Application

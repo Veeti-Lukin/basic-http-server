@@ -2,12 +2,13 @@
 
 #include <sstream>
 #include "HttpRequest.h"
+#include "HttpResponse.h"
 #include "http_types.h"
 
 namespace http {
 
 TcpServer::TcpServer(std::string ip_address, int port)
-    : ip_address_(ip_address), port_(port), server_message_(buildResponse()) {
+    : ip_address_(ip_address), port_(port) {
 
     socket_.bindToAddress(ip_address_, port_);
 }
@@ -34,14 +35,15 @@ void TcpServer::startListen() {
 
         HttpRequest req = connection_socket.readRequest();
         // someway using std::endl here breaks the whole server :)
-        std::cout << getRequestMethodString(req.getRequestMethod()) << " " << req.getResourcePath() << " " << req.getProtocol() << "\n";
+        std::cout << getRequestMethodString(req.getRequestMethod()) << " " << req.getResourcePath()
+                    << " " << types::getHttpProtocolVersionString(req.getProtocol()) << "\n";
         std::cout << req.hasHeaderField(types::CONTENT_TYPE_HEADER) << "\n";
         std::cout << types::getContentBodyFormatString(req.getContentBodyFormat()) << "\n";
 
         std::string a = "";
         //std::getline(std::cin, a);
 
-        bool response_sent = connection_socket.sendResponse(buildResponse(a));
+        bool response_sent = connection_socket.sendResponse(buildTestResponse(a));
         if (response_sent) {
             std::cout << "------ Server Response sent to client ------"  << std::endl;
         }
@@ -64,7 +66,7 @@ void TcpServer::startListen() {
     }
 }*/
 
-std::string TcpServer::buildResponse(std::string text) {
+HttpResponse TcpServer::buildTestResponse(std::string text)  {
     std::string htmlFile = "<!DOCTYPE html><html lang=\"en\"><body><h1> HOME </h1><p> Hello from your Server :) </p><p><b>MORO!<b></p><form method=\"get\" action=\"/start\">\n"
                            "    <h5>" "server message:  " + text + "</h5>\n"
                            "    <input type=\"submit\" value=\"Start\">\n"
@@ -75,11 +77,14 @@ std::string TcpServer::buildResponse(std::string text) {
                                                                    "  <label>Upload file: <input type=\"file\" name=\"myFile\" value=\"test.txt\"></label>\n"
                                                                    "  <button>Send the file</button>\n"
                                                                    "</form></body></html>";
-    std::ostringstream ss;
-    ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\r\n\r\n"
-       << htmlFile;
+    HttpResponse response;
+    response.setProtocol(types::HttpProtocolVersion::HTTP1_1);
+    response.setResponseStatusCode(types::ResponseStatusCode::OK);
+    response.setContentBodyFormat(types::ContentBodyFormat::text_html);
+    response.setContentBody(htmlFile);
 
-    return ss.str();
+
+    return response;
 }
 
 } // namespace http

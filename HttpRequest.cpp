@@ -26,7 +26,10 @@ HttpRequest::HttpRequest(std::string raw_serialized_request) {
         request_method_ = types::getRequestMethodEnum(request_method_string);
 
         std::getline(request_line_ss, resource_path_, ' ');
-        std::getline(request_line_ss, protocol_, ' ');
+        std::string protocol_string;
+        std::getline(request_line_ss, protocol_string, ' ');
+
+        protocol_ = types::getHttpProtocolVersionEnum(protocol_string);
     }
 
     // parse headers
@@ -62,7 +65,7 @@ std::string HttpRequest::getResourcePath() {
     return resource_path_;
 }
 
-std::string HttpRequest::getProtocol() {
+types::HttpProtocolVersion HttpRequest::getProtocol() {
     return protocol_;
 }
 bool HttpRequest::hasHeaderField(std::string& header_key) {

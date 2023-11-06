@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <vector>
 #include "HttpRequest.h"
+#include "HttpResponse.h"
 
 namespace http {
 
@@ -38,7 +39,8 @@ public:
 
     std::string readRawRequest();
     HttpRequest readRequest();
-    bool sendResponse(std::string serialized_response);
+    bool sendRawResponse(std::string serialized_response);
+    bool sendResponse(HttpResponse response);
 
 private:
 #ifdef __linux__
