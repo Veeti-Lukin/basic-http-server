@@ -7,7 +7,7 @@
 int main() {
     using http::TcpServer;
 
-    TcpServer server = TcpServer("0.0.0.0", 1234);
+    TcpServer server = TcpServer("0.0.0.0", 2234);
     server.bindHandler(http::types::RequestMethod::GET, "/", [](http::HttpRequest a, http::HttpResponse b){
         std::string server_message = "";
         //std::getline(std::cin, server_message);

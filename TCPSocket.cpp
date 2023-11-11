@@ -51,15 +51,17 @@ void TCPSocket::bindToAddress(std::string& IP_address, int port) {
     const char enable = 1;
     setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
 
-    if (bind(socket_, (sockaddr*)&socket_address_, socket_address_len_) == SOCKET_ERROR) {
-        #ifdef __linux__
+
+    #ifdef __linux__
+        if (bind(socket_, (sockaddr*)&socket_address_, socket_address_len_) < 0) {
             throw HTTP_SERVER_EXCEPTION(SOCKET_BIND_ERROR);
-        #elif _WIN32
+    #elif _WIN32
+        if (bind(socket_, (sockaddr*)&socket_address_, socket_address_len_) == SOCKET_ERROR) {
             int err_num = WSAGetLastError();
             closesocket(socket_);
             WSACleanup();
             throw HTTP_SERVER_EXCEPTION(SOCKET_BIND_ERROR + ". Bind failed with error *", {std::to_string(err_num)});
-        #endif
+    #endif
     }
 
 }
@@ -124,24 +126,24 @@ HttpRequest TCPSocket::readRequest() {
 bool TCPSocket::sendRawResponse(std::string serialized_response) {
     if(!is_connected_to_client) throw HTTP_SERVER_EXCEPTION(SOCKET_NOT_CONNECTED_TO_CLIENT_ERROR);
 
-    long bytes_sent;
-    long total_bytes_sent;
+    long bytes_sent = 0;
+    long total_bytes_sent = 0;
 
     #ifdef __linux__
         bytes_sent = write(socket_, serialized_response.c_str(), serialized_response.size());
 
             return bytes_sent == serialized_response.size();
     #elif _WIN32
-    while (total_bytes_sent < serialized_response.size())
-    {
-        bytes_sent = send(socket_, serialized_response.c_str(), serialized_response.size(), 0);
-        if (bytes_sent < 0)
+        while (total_bytes_sent < serialized_response.size())
         {
-            break;
+            bytes_sent = send(socket_, serialized_response.c_str(), serialized_response.size(), 0);
+            if (bytes_sent < 0)
+            {
+                break;
+            }
+            total_bytes_sent += bytes_sent;
         }
-        total_bytes_sent += bytes_sent;
-    }
-    return total_bytes_sent == serialized_response.size();
+        return total_bytes_sent == serialized_response.size();
     #endif
 }
 

@@ -32,6 +32,7 @@ public:
     //void bindHandler(types::RequestMethod request_method, const std::string resource_path, Func handler, Ts... args);
 
     static HttpResponse buildTestResponse(std::string text = std::string());
+
 private:
     std::string ip_address_;
     int port_;
@@ -39,7 +40,6 @@ private:
     TCPSocket socket_;
 
      HandlerContainer handlers_;
-
 };
 
 } // namespace http
