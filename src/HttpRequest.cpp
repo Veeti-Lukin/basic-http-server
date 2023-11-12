@@ -1,6 +1,7 @@
 #include "inc/HttpRequest.h"
 
 #include <sstream>
+#include <regex>
 
 const char LINE_END = '\n';
 const std::string END_OF_HEADERS = "\r";
@@ -11,14 +12,14 @@ HttpRequest::HttpRequest(std::string raw_serialized_request) {
 
     std::istringstream ss(raw_serialized_request);
 
-    /*std::string request_headers;
-    std::string request_body;
-    */
-
     // parse request line
     {
         std::string request_line;
         std::getline(ss, request_line, LINE_END);
+
+        // remove the end of "\r" from the end of the line
+        request_line = std::regex_replace(request_line, std::regex("\r"), "");
+
         std::istringstream request_line_ss(request_line);
 
         std::string request_method_string;
@@ -38,8 +39,13 @@ HttpRequest::HttpRequest(std::string raw_serialized_request) {
         std::getline(ss, header_line, LINE_END);
 
         while (header_line != END_OF_HEADERS) {
+            // remove the end of "\r" from the end of the line
+            header_line = std::regex_replace(header_line, std::regex("\r"), "");
+
             std::string key = header_line.substr(0,header_line.find(": "));
             std::string value = header_line.substr(header_line.find(": ")+2, header_line.length());
+
+
             headers_.insert({key, value});
 
             std::getline(ss, header_line, LINE_END);

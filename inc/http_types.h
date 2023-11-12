@@ -332,7 +332,6 @@ inline std::string getHttpProtocolVersionString (HttpProtocolVersion protocol_ve
 }
 
 inline HttpProtocolVersion getHttpProtocolVersionEnum (std::string protocol_version_string) {
-    protocol_version_string = std::regex_replace(protocol_version_string, std::regex("\r"), "");
     if(protocol_version_string == "HTTP/1.0") return HttpProtocolVersion::HTTP1_0;
     else if (protocol_version_string == "HTTP/1.1") return HttpProtocolVersion::HTTP1_1;
     else if (protocol_version_string == "HTTP/2") return HttpProtocolVersion::HTTP2;
@@ -461,7 +460,6 @@ enum class ContentBodyFormat {
 inline ContentBodyFormat getContentBodyFormatEnum(std::string format_string) {
     // this removes the semicolon and parameters of the header if they are present
     format_string = std::regex_replace(format_string, std::regex(";.*"), "");
-    format_string = std::regex_replace(format_string, std::regex("\r"), "");
 
     if (format_string == "application/EDI-X12") return ContentBodyFormat::application_EDI_X12;
     else if (format_string == "application/EDIFACT") return ContentBodyFormat::application_EDIFACT;
