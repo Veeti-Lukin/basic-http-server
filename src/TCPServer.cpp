@@ -32,15 +32,11 @@ void TcpServer::startServing() {
 
         std::cout << "------ Received Request from client ------" << std::endl;
 
-        //std::string request = connection_socket.readRequest();
-        //std::cout << request << '\n';
-
         HttpRequest req = connection_socket.readRequest();
-        // someway using std::endl here breaks the whole server :)
         std::cout << getRequestMethodString(req.getRequestMethod()) << " " << req.getResourcePath()
-                    << " " << types::getHttpProtocolVersionString(req.getProtocol()) << "\n";
-        std::cout << req.hasHeaderField(types::CONTENT_TYPE_HEADER) << "\n";
-        std::cout << types::getContentBodyFormatString(req.getContentBodyFormat()) << "\n";
+                    << " " << types::getHttpProtocolVersionString(req.getProtocol()) << std::endl;
+        std::cout << req.hasHeaderField(types::CONTENT_TYPE_HEADER) << std::endl;
+        std::cout << types::getContentBodyFormatString(req.getContentBodyFormat()) << std::endl;
 
         HttpResponse response(types::HttpProtocolVersion::Unknown, types::ResponseStatusCode::Unknown);
         if(handlers_.find(req.getResourcePath()) != handlers_.end() && handlers_[req.getResourcePath()].find(req.getRequestMethod()) !=  handlers_[req.getResourcePath()].end()) {

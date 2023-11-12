@@ -113,21 +113,24 @@ bool TCPSocket::sendRawResponse(std::string serialized_response) {
     long bytes_sent = 0;
     long total_bytes_sent = 0;
 
-    #ifdef __linux__
-        bytes_sent = write(socket_, serialized_response.c_str(), serialized_response.size());
+    // this while loop handles the case where the message does not fit fully in to the kernels write buffer
+    // if while loop runs more than once the message is continued from where the last message left
+    while (total_bytes_sent < serialized_response.size()) {
 
-            return bytes_sent == serialized_response.size();
-    #elif _WIN32
-        while (total_bytes_sent < serialized_response.size())
-        {
-            bytes_sent = send(socket_, serialized_response.c_str(), serialized_response.size(), 0);
-            if (bytes_sent < 0) {
-                break;
-            }
-            total_bytes_sent += bytes_sent;
-        }
-        return total_bytes_sent == serialized_response.size();
-    #endif
+        std::string serialized_response_split = serialized_response.substr(bytes_sent, serialized_response.size());
+
+        #ifdef __linux__
+            bytes_sent = write(socket_, serialized_response_split.c_str(), serialized_response.size());
+        #elif _WIN32
+            bytes_sent = send(socket_, serialized_response_split.c_str(), serialized_response.size(), 0);
+        #endif
+        // error occurred. Client might be disconnected
+        if(bytes_sent < 0) break;
+
+        total_bytes_sent += bytes_sent;
+    }
+
+    return total_bytes_sent == serialized_response.size();
 }
 
 bool TCPSocket::sendResponse(HttpResponse response) {
