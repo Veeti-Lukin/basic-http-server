@@ -17,13 +17,15 @@ TcpServer::~TcpServer() {
 
 }
 
-void TcpServer::startListen() {
+void TcpServer::startServing() {
     socket_.startListen();
 
     std::cout << "Listening on ADDRESS:  " << ip_address_
               << " PORT: " << port_ << std::endl;
 
-    while (true) {
+    is_serving_ = true;
+
+    while (is_serving_) {
         std::cout << "------  Waiting for new connection ------" <<  std::endl;
 
         TCPSocket connection_socket = socket_.acceptConnectionFromQueue();
@@ -58,6 +60,11 @@ void TcpServer::startListen() {
         }
     }
 }
+
+void TcpServer::stopServing() {
+    is_serving_ = false;
+}
+
 
 void TcpServer::bindHandler(types::RequestMethod request_method, ResourcePath resource_path,
                             HandlerFunction handler) {
@@ -98,6 +105,5 @@ HttpResponse TcpServer::buildTestResponse(std::string text)  {
 
     return response;
 }
-
 
 } // namespace http

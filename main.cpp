@@ -22,7 +22,7 @@ int main() {
 
         return response;
     });
-    server.startListen();
+    server.startServing();
 
     return EXIT_SUCCESS;
 }

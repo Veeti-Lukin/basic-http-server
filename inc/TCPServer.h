@@ -25,7 +25,9 @@ public:
     ~TcpServer();
 
     //
-    void startListen();
+    void startServing();
+    // Handler function can call this
+    void stopServing();
 
     void bindHandler(types::RequestMethod request_method, ResourcePath resource_path, HandlerFunction handler);
     //template<class Func, typename... Ts>
@@ -40,6 +42,8 @@ private:
     TCPSocket socket_;
 
      HandlerContainer handlers_;
+
+     bool is_serving_ = false;
 };
 
 } // namespace http
