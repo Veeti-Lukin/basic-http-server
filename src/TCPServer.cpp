@@ -1,9 +1,9 @@
-﻿#include "TCPServer.h"
+﻿#include "inc/TCPServer.h"
 
 #include <sstream>
-#include "HttpRequest.h"
-#include "HttpResponse.h"
-#include "http_types.h"
+#include "inc/HttpRequest.h"
+#include "inc/HttpResponse.h"
+#include "inc/http_types.h"
 
 namespace http {
 

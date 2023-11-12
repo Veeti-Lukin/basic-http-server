@@ -1,6 +1,6 @@
 
-#include "TCPSocket.h"
-#include "HttpServerException.h"
+#include "inc/TCPSocket.h"
+#include "inc/HttpServerException.h"
 
 
 namespace http {
@@ -74,22 +74,6 @@ void TCPSocket::startListen() {
 void TCPSocket::setMaxAmountOfConnectionThreads(unsigned int amount) {
     max_amount_of_connection_threads_ = amount;
 }
-
-/*unsigned long TCPSocket::getConnectionQueueLen()  {
-    #ifdef __linux__
-        int pendingConnections = fcntl(socket_, F_GETOWN, 0);
-        if (pendingConnections == -1) {
-            throw HTTP_SERVER_EXCEPTION("1");
-        }
-    return pendingConnections;
-    #elif _WIN32
-        unsigned long pendingConnections = 0;
-        if (ioctlsocket(socket_, FIONREAD, &pendingConnections) == SOCKET_ERROR) {
-            throw HTTP_SERVER_EXCEPTION("1");
-        }
-        return static_cast<int>(pendingConnections);
-    #endif
-}*/
 
 TCPSocket TCPSocket::acceptConnectionFromQueue() {
     #ifdef __linux__

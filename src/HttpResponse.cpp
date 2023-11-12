@@ -1,6 +1,6 @@
-#include "HttpResponse.h"
+#include "inc/HttpResponse.h"
 
-#include "HttpServerException.h"
+#include "inc/HttpServerException.h"
 
 
 namespace http {

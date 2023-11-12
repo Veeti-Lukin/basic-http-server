@@ -31,7 +31,6 @@ public:
     // moves socket to passive listen mode where it listens for incoming connections on our socket address.
     // new connections are put in the connetion thread queue
     void startListen();
-    //unsigned long getConnectionQueueLen();
     // accepts a connection from the queue
     TCPSocket acceptConnectionFromQueue();
 
