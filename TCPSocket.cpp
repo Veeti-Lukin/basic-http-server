@@ -137,8 +137,7 @@ bool TCPSocket::sendRawResponse(std::string serialized_response) {
         while (total_bytes_sent < serialized_response.size())
         {
             bytes_sent = send(socket_, serialized_response.c_str(), serialized_response.size(), 0);
-            if (bytes_sent < 0)
-            {
+            if (bytes_sent < 0) {
                 break;
             }
             total_bytes_sent += bytes_sent;

@@ -15,9 +15,8 @@ int main() {
 
     server.bindHandler(http::types::RequestMethod::GET, "/start?", [](http::HttpRequest a, http::HttpResponse b){
         std::string html = "<!DOCTYPE html><html lang=\"en\"><body><h1> HANDLER IS WORKING!!! </h1></body></html>";
-        http::HttpResponse response;
-        response.setProtocol(http::types::HttpProtocolVersion::HTTP1_1);
-        response.setResponseStatusCode(http::types::ResponseStatusCode::OK);
+
+        http::HttpResponse response(http::types::HttpProtocolVersion::HTTP1_1, http::types::ResponseStatusCode::OK);
         response.setContentBodyFormat(http::types::ContentBodyFormat::text_html);
         response.setContentBody(html);
 

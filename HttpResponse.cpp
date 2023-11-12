@@ -7,8 +7,9 @@ namespace http {
 
 const std::string NOT_READY_FOR_SERIALIZATION_ERROR = "response not ready for serialization";
 
-HttpResponse::HttpResponse() {
-
+HttpResponse::HttpResponse(types::HttpProtocolVersion protocol_version, types::ResponseStatusCode status_code) {
+    protocol_version_ = protocol_version;
+    response_status_code_ = status_code;
 }
 
 void HttpResponse::setProtocol(types::HttpProtocolVersion protocol_version) {

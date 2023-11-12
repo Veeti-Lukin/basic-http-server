@@ -12,7 +12,7 @@ namespace http {
 
 class HttpResponse {
 public:
-    HttpResponse();
+    HttpResponse(types::HttpProtocolVersion protocol_version, types::ResponseStatusCode status_code);
 
     void setProtocol(types::HttpProtocolVersion protocol_version);
     void setResponseStatusCode(types::ResponseStatusCode status_code);

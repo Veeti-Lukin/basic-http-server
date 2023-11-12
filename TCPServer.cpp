@@ -40,7 +40,7 @@ void TcpServer::startListen() {
         std::cout << req.hasHeaderField(types::CONTENT_TYPE_HEADER) << "\n";
         std::cout << types::getContentBodyFormatString(req.getContentBodyFormat()) << "\n";
 
-        HttpResponse response;
+        HttpResponse response(types::HttpProtocolVersion::Unknown, types::ResponseStatusCode::Unknown);
         if(handlers_.find(req.getResourcePath()) != handlers_.end() && handlers_[req.getResourcePath()].find(req.getRequestMethod()) !=  handlers_[req.getResourcePath()].end()) {
             response = handlers_[req.getResourcePath()].at(req.getRequestMethod())(req, response);
         }
@@ -91,9 +91,7 @@ HttpResponse TcpServer::buildTestResponse(std::string text)  {
                                                                    "  <label>Upload file: <input type=\"file\" name=\"myFile\" value=\"test.txt\"></label>\n"
                                                                    "  <button>Send the file</button>\n"
                                                                    "</form></body></html>";
-    HttpResponse response;
-    response.setProtocol(types::HttpProtocolVersion::HTTP1_1);
-    response.setResponseStatusCode(types::ResponseStatusCode::OK);
+    HttpResponse response(types::HttpProtocolVersion::HTTP1_1,types::ResponseStatusCode::OK);
     response.setContentBodyFormat(types::ContentBodyFormat::text_html);
     response.setContentBody(htmlFile);
 
