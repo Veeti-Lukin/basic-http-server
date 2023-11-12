@@ -11,6 +11,14 @@ HttpResponse::HttpResponse(types::HttpProtocolVersion protocol_version, types::R
     protocol_version_ = protocol_version;
     response_status_code_ = status_code;
 }
+HttpResponse::HttpResponse(types::HttpProtocolVersion protocol_version, types::ResponseStatusCode status_code,
+                           types::ContentBodyFormat content_body_format, std::string content_body) {
+    protocol_version_ = protocol_version;
+    response_status_code_ = status_code;
+    content_body_format_ = content_body_format;
+    content_body_ = content_body;
+
+}
 
 void HttpResponse::setProtocol(types::HttpProtocolVersion protocol_version) {
     protocol_version_ = protocol_version;
@@ -66,5 +74,6 @@ std::string HttpResponse::serialize() {
 
     return ss.str();
 }
+
 
 } // http

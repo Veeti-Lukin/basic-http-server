@@ -7,6 +7,8 @@
 
 namespace http {
 
+const std::string NOT_FOUND_ERROR_HTML = "<!DOCTYPE html><html lang=\"en\"><body><h1> ERROR 404 Not Found </h1></body></html>";
+
 TcpServer::TcpServer(std::string ip_address, int port)
     : ip_address_(ip_address), port_(port) {
 
@@ -45,6 +47,8 @@ void TcpServer::startServing() {
         else {
             response.setProtocol(types::HttpProtocolVersion::HTTP1_1);
             response.setResponseStatusCode(types::ResponseStatusCode::NotFound);
+            response.setContentBodyFormat(types::ContentBodyFormat::text_html);
+            response.setContentBody(NOT_FOUND_ERROR_HTML);
         }
 
         bool response_sent = connection_socket.sendResponse(response);

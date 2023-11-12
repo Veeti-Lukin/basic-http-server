@@ -13,6 +13,8 @@ namespace http {
 class HttpResponse {
 public:
     HttpResponse(types::HttpProtocolVersion protocol_version, types::ResponseStatusCode status_code);
+    HttpResponse(types::HttpProtocolVersion protocol_version, types::ResponseStatusCode status_code,
+                 types::ContentBodyFormat content_body_format, std::string content_body);
 
     void setProtocol(types::HttpProtocolVersion protocol_version);
     void setResponseStatusCode(types::ResponseStatusCode status_code);
