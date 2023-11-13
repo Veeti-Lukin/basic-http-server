@@ -99,7 +99,10 @@ std::string TCPSocket::readRawRequest() {
     #elif _WIN32
         received_bytes = recv(socket_, buffer, BUFFER_SIZE, 0);
     #endif
-    if (received_bytes < 0) throw HTTP_SERVER_EXCEPTION("Failed to read bytes from client socket connection");
+
+    if (received_bytes < 0) {
+        throw HTTP_SERVER_EXCEPTION("Failed to read bytes from client socket connection. WSAError: "  + std::to_string(WSAGetLastError()));
+    }
     return std::string(buffer);
 }
 

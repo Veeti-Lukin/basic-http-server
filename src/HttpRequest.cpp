@@ -9,6 +9,8 @@ const std::string END_OF_HEADERS = "\r";
 namespace http {
 
 HttpRequest::HttpRequest(std::string raw_serialized_request) {
+    // for example when th client send [FIN, ACK] to server to close connection
+    if(raw_serialized_request.empty()) return;
 
     std::istringstream ss(raw_serialized_request);
 
