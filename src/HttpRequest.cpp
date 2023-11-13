@@ -74,11 +74,11 @@ std::string HttpRequest::getResourcePath() {
 types::HttpProtocolVersion HttpRequest::getProtocol() {
     return protocol_;
 }
-bool HttpRequest::hasHeaderField(std::string& header_key) {
+bool HttpRequest::hasHeaderField(std::string header_key) {
     return headers_.find(header_key) != headers_.end();
 }
 
-std::string HttpRequest::getHeaderField(std::string &header_key) {
+std::string HttpRequest::getHeaderField(std::string header_key) {
     if(!hasHeaderField(header_key)) return "";
 
     return headers_.at(header_key);

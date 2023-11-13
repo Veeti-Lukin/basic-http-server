@@ -15,8 +15,8 @@ public:
     types::RequestMethod getRequestMethod();
     std::string getResourcePath();
     types::HttpProtocolVersion getProtocol();
-    bool hasHeaderField(std::string& header_key);
-    std::string getHeaderField(std::string& header_key);
+    bool hasHeaderField(std::string header_key);
+    std::string getHeaderField(std::string header_key);
     std::string getContentBody();
     types::ContentBodyFormat getContentBodyFormat();
 

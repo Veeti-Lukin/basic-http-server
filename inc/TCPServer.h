@@ -29,6 +29,8 @@ public:
     // Handler function can call this
     void stopServing();
 
+    void handleConnection(TCPSocket& connection_socket);
+
     void bindHandler(types::RequestMethod request_method, ResourcePath resource_path, HandlerFunction handler);
     //template<class Func, typename... Ts>
     //void bindHandler(types::RequestMethod request_method, const std::string resource_path, Func handler, Ts... args);
@@ -38,11 +40,8 @@ public:
 private:
     std::string ip_address_;
     int port_;
-
     TCPSocket socket_;
-
      HandlerContainer handlers_;
-
      bool is_serving_ = false;
 };
 

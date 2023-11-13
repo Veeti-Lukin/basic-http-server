@@ -31,33 +31,17 @@ void TcpServer::startServing() {
         std::cout << "------  Waiting for new connection ------" <<  std::endl;
 
         TCPSocket connection_socket = socket_.acceptConnectionFromQueue();
+        std::cout << "------  Connection accepted ------" <<  std::endl;
 
-        std::cout << "------ Received Request from client ------" << std::endl;
-
-        HttpRequest req = connection_socket.readRequest();
+        //HttpRequest req = connection_socket.readRequest();
+        /*
         std::cout << getRequestMethodString(req.getRequestMethod()) << " " << req.getResourcePath()
                     << " " << types::getHttpProtocolVersionString(req.getProtocol()) << std::endl;
         std::cout << req.hasHeaderField(types::CONTENT_TYPE_HEADER) << std::endl;
         std::cout << types::getContentBodyFormatString(req.getContentBodyFormat()) << std::endl;
+        */
 
-        HttpResponse response(types::HttpProtocolVersion::Unknown, types::ResponseStatusCode::Unknown);
-        if(handlers_.find(req.getResourcePath()) != handlers_.end() && handlers_[req.getResourcePath()].find(req.getRequestMethod()) !=  handlers_[req.getResourcePath()].end()) {
-            response = handlers_[req.getResourcePath()].at(req.getRequestMethod())(req, response);
-        }
-        else {
-            response.setProtocol(types::HttpProtocolVersion::HTTP1_1);
-            response.setResponseStatusCode(types::ResponseStatusCode::NotFound);
-            response.setContentBodyFormat(types::ContentBodyFormat::text_html);
-            response.setContentBody(NOT_FOUND_ERROR_HTML);
-        }
-
-        bool response_sent = connection_socket.sendResponse(response);
-        if (response_sent) {
-            std::cout << "------ Server Response sent to client ------"  << std::endl;
-        }
-        else {
-            std::cout << "------ Error sending response to client ------" << std::endl;
-        }
+        handleConnection(connection_socket);
     }
 }
 
@@ -104,6 +88,42 @@ HttpResponse TcpServer::buildTestResponse(std::string text)  {
 
 
     return response;
+}
+
+void TcpServer::handleConnection(TCPSocket &connection_socket)  {
+    while (is_serving_) {
+        HttpRequest req = connection_socket.readRequest();
+        std::cout << "------ Received Request from client ------" << std::endl;
+
+        HttpResponse response(types::HttpProtocolVersion::Unknown, types::ResponseStatusCode::Unknown);
+        if (handlers_.find(req.getResourcePath()) != handlers_.end() &&
+            handlers_[req.getResourcePath()].find(req.getRequestMethod()) != handlers_[req.getResourcePath()].end()) {
+            response = handlers_[req.getResourcePath()].at(req.getRequestMethod())(req, response);
+        } else {
+            response.setProtocol(types::HttpProtocolVersion::HTTP1_1);
+            response.setResponseStatusCode(types::ResponseStatusCode::NotFound);
+            response.setContentBodyFormat(types::ContentBodyFormat::text_html);
+            response.setContentBody(NOT_FOUND_ERROR_HTML);
+        }
+
+        bool response_sent = connection_socket.sendResponse(response);
+
+        // if the response cant be sent client might have closed the connection
+        // or error has occurred
+        if (!response_sent) {
+            std::cout << "------ Error sending response to client ------" << std::endl;
+            break;
+        }
+
+        std::cout << "------ Server Response sent to client ------"  << std::endl;
+
+
+        // Check if the client wants to keep the connection open
+        if (req.hasHeaderField("Connection") && req.getHeaderField("Connection") != "keep-alive") {
+            std::cout << "------ Connection with client closed ------"  << std::endl;
+            break;  // Break the loop if not using keep-alive
+        }
+    }
 }
 
 } // namespace http
