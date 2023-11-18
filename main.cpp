@@ -1,8 +1,8 @@
 #include <iostream>
-#include "inc/TCPServer.h"
-#include "inc/http_types.h"
-#include "inc/HttpRequest.h"
-#include "inc/HttpResponse.h"
+#include "http_server/TCPServer.h"
+#include "http_server/http_types.h"
+#include "http_server/HttpRequest.h"
+#include "http_server/HttpResponse.h"
 
 int main() {
     using http::TcpServer;

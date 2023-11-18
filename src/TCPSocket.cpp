@@ -1,6 +1,6 @@
 
-#include "inc/TCPSocket.h"
-#include "inc/HttpServerException.h"
+#include "http_server/TCPSocket.h"
+#include "http_server/HttpServerException.h"
 
 
 namespace http {
