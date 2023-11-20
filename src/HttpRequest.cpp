@@ -52,8 +52,8 @@ HttpRequest::HttpRequest(std::string raw_serialized_request) {
         }
     }
 
-    // TODO: tähän loput mitkä ei mennyt muihin
-    content_body_ = raw_serialized_request;
+    // handle content body
+    while (std::getline(ss, content_body_));
 
     if(hasHeaderField(types::CONTENT_TYPE_HEADER)) {
         content_body_format_ = types::getContentBodyFormatEnum(getHeaderField(types::CONTENT_TYPE_HEADER));
